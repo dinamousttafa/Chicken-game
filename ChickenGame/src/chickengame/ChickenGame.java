@@ -1,6 +1,7 @@
 
-package chickengame;
 
+package thegame;
+import com.mysql.cj.protocol.x.ContinuousOutputStream;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -17,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+
 public class ChickenGame extends JFrame implements MouseListener, Runnable{
     
     Font font20 = new Font("TimesNewRoman", Font.BOLD, 20);
@@ -26,11 +28,13 @@ public class ChickenGame extends JFrame implements MouseListener, Runnable{
     
     JPanel contentpanel = new JPanel(null);
     JLabel firecount = new JLabel("Number Of Bullets : ");
-    JLabel numberofshoot = new JLabel("30");
+    JLabel numberofshoot = new JLabel("50");
     JLabel score = new JLabel("Score : ");
     JLabel numberofscore = new JLabel("0");
     JLabel chickencount = new JLabel("Number Of Chicken : ");
     JLabel numberofchicken = new JLabel("0");
+    
+    //JButton database = new JButton ("Players");
     
     JPanel gameoverpanel = new JPanel(null);
     JLabel gameover = new JLabel("Game Over ! ");
@@ -39,13 +43,9 @@ public class ChickenGame extends JFrame implements MouseListener, Runnable{
     JButton pause = new JButton("Pause");
     JButton End = new JButton("End");
     
-    // احداثيات المركبه
+   
     int vechileX = 600, vechileY = 700, vechileWidth = 100, vechileHight = 50;
-    
-    // احداثيات الطلقات
     int fireX = vechileX + 20, fireY = vechileY -45, fireWidth = 25, fireHight = 40;
-    
-    // احداثيات الفراخ
     int chickenX = 0, chickenY = -10, chickenWidth = 105, chickenHight = 90;
     
     boolean end = true ;
@@ -61,13 +61,33 @@ public class ChickenGame extends JFrame implements MouseListener, Runnable{
     
     
     public ChickenGame(){
+      
+
+
+        
+        ImageIcon img = new ImageIcon("/thegame/BigChicken1.PNG");
+        String iconPath = "/thegame/BigChicken1.png";
+        java.net.URL iconURL = ChickenGame.class.getResource(iconPath);
+        if (iconURL != null) {
+           
+            ImageIcon icon = new ImageIcon(iconURL);
+            
+           
+            setIconImage(icon.getImage());
+        } else {
+            System.out.println("Icon image not found");
+        }
+        this.setTitle("Chicken Game");
+        
+        
+        
         this.setSize(1700, 950);
         this.setLayout(null);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
         try{
-            vechile.setIcon(new ImageIcon(getClass().getResource("/Images/vehicle.PNG")));
+            vechile.setIcon(new ImageIcon(getClass().getResource("/thegame/veh.PNG")));
         }catch(Exception ex){
             System.out.println("vehicle photo lost \n " + ex);
         }
@@ -76,7 +96,7 @@ public class ChickenGame extends JFrame implements MouseListener, Runnable{
         areaplay.setBounds(0, 0, 1200, 800);
         vechile.setBounds(vechileX, vechileY, vechileWidth, vechileHight);
         
-        contentpanel.setBounds(1250, 350, 400, 450);
+        contentpanel.setBounds(1220, 350, 300, 400);
         contentpanel.setBorder(BorderFactory.createTitledBorder(""));
         firecount.setBounds(20, 20, 200, 35);
         numberofshoot.setBounds(230, 20, 100, 35);
@@ -87,9 +107,10 @@ public class ChickenGame extends JFrame implements MouseListener, Runnable{
         gameoverpanel.setBounds(400, 400, 500, 150);
         gameoverpanel.setBorder(BorderFactory.createTitledBorder(""));
         gameover.setBounds(100, 50, 300, 35);
-        pause.setBounds(1250, 100, 150, 35);
-        End.setBounds(1450, 100, 150, 35);
-        start.setBounds(1250, 150, 350, 35);
+        pause.setBounds(1220, 100, 150, 35);
+        End.setBounds(1390, 100, 150, 35);
+        start.setBounds(1220, 150, 350, 35);
+        //database.setBounds(1300,200,150,35);
         
         firecount.setFont(font20);
         numberofshoot.setFont(font20);
@@ -99,26 +120,29 @@ public class ChickenGame extends JFrame implements MouseListener, Runnable{
         numberofchicken.setFont(font20);
         gameover.setFont(new Font("TimesNewRoman", Font.BOLD, 36));
         
-        firecount.setForeground(Color.BLUE);
-        numberofshoot.setForeground(Color.BLUE);
-        score.setForeground(Color.BLUE);
-        numberofscore.setForeground(Color.BLUE);
-        chickencount.setForeground(Color.BLUE);
-        numberofchicken.setForeground(Color.BLUE);
+        firecount.setForeground(Color.white);
+        numberofshoot.setForeground(Color.white);
+        score.setForeground(Color.white);
+        numberofscore.setForeground(Color.white);
+        chickencount.setForeground(Color.white);
+        numberofchicken.setForeground(Color.white);
         gameover.setForeground(Color.RED);
         pause.setForeground(Color.WHITE);
         End.setForeground(Color.WHITE);
         start.setForeground(Color.WHITE);
+        //database.setForeground(Color.WHITE);
         
         pause.setBackground(Color.BLACK);
         End.setBackground(Color.BLACK);
         start.setBackground(Color.BLACK);
+        //database.setForeground(Color.BLACK);
+   
         
         gameoverpanel.setVisible(false);
         this.getContentPane().setBackground(Color.BLACK);
-        areaplay.setBackground(Color.decode("#020147"));
+        areaplay.setBackground(Color.black);
         contentpanel.setBackground(Color.BLACK);
-        gameoverpanel.setBackground(Color.decode("020147"));
+        gameoverpanel.setBackground(Color.white);
         gameover.setHorizontalAlignment(JLabel.CENTER);
         
         contentpanel.add(firecount);
@@ -128,16 +152,19 @@ public class ChickenGame extends JFrame implements MouseListener, Runnable{
         contentpanel.add(chickencount);
         contentpanel.add(numberofchicken);
         
+        
         gameoverpanel.add(gameover);
         
         areaplay.add(vechile);
-        
+     
         this.add(gameoverpanel);
         this.add(areaplay);
         this.add(contentpanel);
         this.add(start);
         this.add(End);
         this.add(pause);
+        //this.add(database);
+        
         
         start.addActionListener(new ActionListener() {
             @Override
@@ -145,6 +172,17 @@ public class ChickenGame extends JFrame implements MouseListener, Runnable{
                 end = false;
             }
         });
+       
+        /*
+        database.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new startdatabase().setVisible(true);
+            }
+        });
+        */
+        
+        
         
         pause.addActionListener(new ActionListener() {
             @Override
@@ -187,10 +225,12 @@ public class ChickenGame extends JFrame implements MouseListener, Runnable{
         
     }
     
+   
+    
     public void createFire(){
         JLabel fire = new JLabel();
         try{
-            fire.setIcon(new ImageIcon(getClass().getResource("/Images/fire.jpg")));
+            fire.setIcon(new ImageIcon(getClass().getResource("/thegame/fir.jpg")));
         }catch(Exception ex){ex.printStackTrace();}
         this.fire.add(fire);
         firepositionX.add(fireX);
@@ -219,7 +259,7 @@ public class ChickenGame extends JFrame implements MouseListener, Runnable{
     public void createChicken(){
         JLabel chicken = new JLabel();
         try{
-            chicken.setIcon(new ImageIcon(getClass().getResource("/Images/chicken.PNG")));
+            chicken.setIcon(new ImageIcon(getClass().getResource("/thegame/ken.PNG")));
         }catch(Exception ex){ex.printStackTrace();}
         this.chicken.add(chicken);
         chickenX = random.nextInt(1100);
@@ -306,7 +346,7 @@ public class ChickenGame extends JFrame implements MouseListener, Runnable{
     public void mouseExited(MouseEvent e) {
     }
 
-    int countertocreatechicken = 0, counterrandom = 0, ns = 0;
+    int countertocreatechicken = 0, counterrandom = 0;
     @Override
     public void run() {
         while(!Thread.currentThread().isInterrupted()){
@@ -316,13 +356,7 @@ public class ChickenGame extends JFrame implements MouseListener, Runnable{
                     counterrandom = random.nextInt(600);
                     countertocreatechicken = 0;
                 }
-                if(numberofshoot.getText().equals("0")){
-                    ns++;
-                    if(ns == 3000){
-                        ns = 0;
-                        numberofshoot.setText("30");
-                    }
-                }
+                
                 
                 countertocreatechicken++;
                 moveFire();
@@ -334,3 +368,4 @@ public class ChickenGame extends JFrame implements MouseListener, Runnable{
     }
     
 }
+
